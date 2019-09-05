@@ -36,21 +36,25 @@
 
 服务器端实现代码：
 
-```
+```c++
 /**
  * TCP服务器通信基本流程
  * zhangyl 2018.12.13
  */
 #include <sys/types.h> 
 #include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include <arpa/inet.h>	//地址转换功能
+#include <unistd.h>			
 #include <iostream>
 #include <string.h>
 
 int main(int argc, char* argv[])
 {
     //1.创建一个侦听socket
+    /*-------------------------------------------------------------------------------	
+  	//protocol取值为0时，表示告诉操作系统为给定的socket类型选取默认的实现协议
+    //意思是可以通过如下函数创建一个IPv4TCP socket
+    /------------------------------------------------------------------------------*/
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
     if (listenfd == -1)
     {
@@ -59,6 +63,27 @@ int main(int argc, char* argv[])
     }
 
     //2.初始化服务器地址
+  	/*-------------------------------------------------------------------------------	
+  	/使用sockaddr_in类型创建一个IPv4数据包的地址
+  	/struct sockaddr 和 struct soceaddr_in 用来处理网络通信的地址
+  	/sockaddr 在头文件#include<sys/socket.h>
+  	/struct sockaddr{
+  	/		sa_family_t sin_family; //地址族
+  	/   char sa_data[14];				//14字节，包含套接字中的目标地址和端口信息
+  	/}
+  	/sockaddr_in 在头文件#include<sys/nitinet/in.h>或者#include<arpa/inet.h>
+  	/解决了sockaddrde把port和addr分开存储
+  	/struct sockaddr_in{
+  	/		sa_family_t 		sin_family;		//地址族
+  	/		uint16_t				sin_port;			//16位TCP/UDP端口号
+  	/		struct in_addr	sin_addr;			//32位IP地址
+    /		char						sin_zero[8];	//不实用，用来和sockaddr对齐的
+  	/}
+  	/
+  	/struct in_addr{
+  	/		In_addr_t				s_addr;				//32为IPv4地址
+  	}
+    /------------------------------------------------------------------------------*/
     struct sockaddr_in bindaddr;
     bindaddr.sin_family = AF_INET;
     bindaddr.sin_addr.s_addr = htonl(INADDR_ANY);
