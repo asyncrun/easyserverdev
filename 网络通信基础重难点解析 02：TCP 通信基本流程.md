@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
   	/
   	/struct in_addr{
   	/		In_addr_t				s_addr;				//32为IPv4地址
-  	}
+  	/}
     /------------------------------------------------------------------------------*/
     struct sockaddr_in bindaddr;
     bindaddr.sin_family = AF_INET;
